@@ -42,6 +42,9 @@ __5. Install dependencies and start the server:__
 
 ```
 npm install
+```
+
+```
 npm start
 ```
 * The server will be running at `http://localhost:8080`.
