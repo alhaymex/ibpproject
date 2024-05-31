@@ -4,6 +4,8 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 
 import Navbar from "@/components/Navbar";
+import CheckAuth from "@/provider/CheckAuth";
+import { MyProvider } from "@/provider/Provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,13 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <NextTopLoader color="yellow" showSpinner={false} />
+    <MyProvider>
+      <CheckAuth>
+        <html lang="en">
+          <body className={inter.className}>
+            <NextTopLoader color="yellow" showSpinner={false} />
 
-        <Navbar />
-        <main className="m-6">{children}</main>
-      </body>
-    </html>
+            <Navbar />
+            <main className="m-6">{children}</main>
+          </body>
+        </html>
+      </CheckAuth>
+    </MyProvider>
   );
 }
