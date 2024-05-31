@@ -10,3 +10,5 @@ const userSchama = new Schema({
   password: { type: String, required: true },
   profile: { type: String, default: seed },
 });
+
+module.exports = mongoose.model("User", userSchama);
