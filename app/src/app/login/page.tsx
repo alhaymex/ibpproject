@@ -1,11 +1,21 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/reducers/AuthReducer";
+import { useSelector } from "react-redux";
 
 import axios from "axios";
 
 const page: React.FC = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
+
+  const isLoggedIn = useSelector((state: any) => state.auth.loggedIn);
+
+  if (isLoggedIn) {
+    router.push("/");
+  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +44,11 @@ const page: React.FC = () => {
       .post("http://localhost:8080/auth/login", user, { withCredentials: true })
       .then((res) => {
         if (res.data.status === "success") {
+          console.log(res.data.user);
+          const uid = res.data.user.uid;
+          const profilePic = res.data.user.image;
+
+          dispatch(login({ uid, profilePic }));
           router.push("/");
         }
       })

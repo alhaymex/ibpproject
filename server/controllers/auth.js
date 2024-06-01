@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 exports.checkAuth = async (req, res) => {
   if (!req.session.user) {
-    console.log("Not logged in");
+    // console.log("Not logged in");
     return res.status(200).json({ status: false });
   }
 
@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
   // Get user data
   const { email, password } = req.body;
 
-  console.log(email, password);
+  // console.log(email, password);
 
   const user = await User.findOne({ email });
   if (!user) return res.status(200).json({ Message: "User doesn't exist!" });
@@ -37,7 +37,7 @@ exports.login = async (req, res) => {
     res.status(200).json({
       status: "success",
       user: {
-        image: user.image,
+        image: user.profile,
         uid: user._id,
       },
     });

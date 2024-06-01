@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="flex justify-center">
       {isLoggedIn ? (
-        <div>LoggedIn</div>
+        <div>Hello</div>
       ) : (
         <div className="">
           You need to{" "}
