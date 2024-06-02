@@ -18,7 +18,7 @@ export default function Home() {
   };
 
   return (
-    <nav className="p-3 bg-base-100">
+    <nav className="p-3 bg-base-100 shadow-sm">
       <div className="navbar bg-base-100">
         <div className="flex-1">
           <Link href="/" className="btn btn-ghost text-xl">
@@ -29,13 +29,6 @@ export default function Home() {
           <div className="navbar bg-base-100">
             <div className="flex-1"></div>
             <div className="flex-none gap-2">
-              <div className="form-control">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="input input-bordered w-24 md:w-auto"
-                />
-              </div>
               <div className="dropdown dropdown-end">
                 <div
                   tabIndex={0}
@@ -60,7 +53,7 @@ export default function Home() {
                       Profile
                     </Link>
                   </li>
-                  {role === "admin" ? (
+                  {role == "admin" ? (
                     <li>
                       <Link href="/cpanel">Admin Panel</Link>
                     </li>

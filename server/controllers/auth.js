@@ -24,7 +24,10 @@ exports.checkAuth = async (req, res) => {
 
   return res
     .status(200)
-    .json({ status: true, user: { uid: user._id, image: user.profile } });
+    .json({
+      status: true,
+      user: { uid: user._id, image: user.profile, role: user.role },
+    });
 };
 
 exports.login = async (req, res) => {
@@ -95,4 +98,22 @@ exports.register = async (req, res) => {
   } catch (error) {
     console.log("Something went wrong", error);
   }
+};
+
+exports.profile = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(200).json({ status: false });
+  }
+  const userID = req.session.user;
+
+  const user = await User.findOne({ _id: userID });
+
+  res.status(200).json({
+    status: true,
+    user: {
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+    },
+  });
 };

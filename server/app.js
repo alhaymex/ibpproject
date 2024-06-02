@@ -17,6 +17,7 @@ const store = new MongoDBStore({
 
 // Routes imports
 const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
@@ -33,6 +34,7 @@ app.use(
 );
 
 app.use("/auth", authRoutes);
+app.use("/cpanel", adminRoutes);
 
 const port = process.env.PORT || 8080;
 mongoose.connect(process.env.DBCONN).then(() => {

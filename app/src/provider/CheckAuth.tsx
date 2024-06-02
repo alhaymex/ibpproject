@@ -15,10 +15,11 @@ const CheckAuth = ({ children }: { children: React.ReactNode }) => {
         if (res.data.status == true) {
           const uid = res.data.user.uid;
           const profilePic = res.data.user.image;
+          const role = res.data.user.role;
 
-          console.log(profilePic);
+          // console.log(profilePic);
 
-          dispatch(login({ uid, profilePic }));
+          dispatch(login({ uid, profilePic, role }));
         }
       } catch (error) {
         console.log(error);
