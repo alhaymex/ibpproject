@@ -54,8 +54,9 @@ const page: React.FC = () => {
         } else {
           const uid = res.data.user.uid;
           const profilePic = res.data.user.image;
+          const role = res.data.user.role;
 
-          dispatch(login({ uid, profilePic }));
+          dispatch(login({ uid, profilePic, role }));
           router.push("/");
         }
       })

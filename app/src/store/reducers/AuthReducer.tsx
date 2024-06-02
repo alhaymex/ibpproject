@@ -4,6 +4,7 @@ const initialState = {
   loggedIn: false,
   uid: "",
   profilePic: "",
+  role: "",
 };
 
 const authSlice = createSlice({
@@ -14,11 +15,13 @@ const authSlice = createSlice({
       state.loggedIn = true;
       state.uid = action.payload.uid;
       state.profilePic = action.payload.profilePic;
+      state.role = action.payload.role;
     },
     logout(state) {
       state.loggedIn = false;
       state.uid = "";
       state.profilePic = "";
+      state.role = "";
     },
   },
 });

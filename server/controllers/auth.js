@@ -50,6 +50,7 @@ exports.login = async (req, res) => {
       user: {
         image: user.profile,
         uid: user._id,
+        role: user.role,
       },
     });
   } catch (error) {

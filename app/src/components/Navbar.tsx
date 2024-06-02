@@ -9,6 +9,7 @@ export default function Home() {
   const router = useRouter();
   const isLoggedIn = useSelector((state: any) => state.auth.loggedIn);
   const img = useSelector((state: any) => state.auth.profilePic);
+  const role = useSelector((state: any) => state.auth.role);
 
   const handleLogout = async () => {
     await axios.post("http://localhost:8080/auth/logout").then((res) => {
@@ -55,14 +56,16 @@ export default function Home() {
                   className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
                 >
                   <li>
-                    <a className="justify-between">
+                    <Link href="/profile" className="justify-between">
                       Profile
-                      <span className="badge">New</span>
-                    </a>
+                    </Link>
                   </li>
-                  <li>
-                    <a>Settings</a>
-                  </li>
+                  {role === "admin" ? (
+                    <li>
+                      <Link href="/cpanel">Admin Panel</Link>
+                    </li>
+                  ) : null}
+
                   <li>
                     <button onClick={handleLogout}>Logout</button>
                   </li>
