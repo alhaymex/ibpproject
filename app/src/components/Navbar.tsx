@@ -1,12 +1,21 @@
 "use client";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
 export default function Home() {
+  const router = useRouter();
   const isLoggedIn = useSelector((state: any) => state.auth.loggedIn);
   const img = useSelector((state: any) => state.auth.profilePic);
-  console.log(img);
+
+  const handleLogout = async () => {
+    await axios.post("http://localhost:8080/auth/logout").then((res) => {
+      router.push("/login");
+    });
+  };
+
   return (
     <nav className="p-3 bg-base-100">
       <div className="navbar bg-base-100">
@@ -55,7 +64,7 @@ export default function Home() {
                     <a>Settings</a>
                   </li>
                   <li>
-                    <a>Logout</a>
+                    <button onClick={handleLogout}>Logout</button>
                   </li>
                 </ul>
               </div>

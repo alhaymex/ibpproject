@@ -7,4 +7,8 @@ router.get("/checkAuth", authControllers.checkAuth);
 
 router.post("/login", authControllers.login);
 
+router.post("/register", authControllers.register);
+
+router.post("/logout", authControllers.logout);
+
 module.exports = router;

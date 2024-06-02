@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { login } from "@/store/reducers/AuthReducer";
 import { useSelector } from "react-redux";
 
+import { Toaster, toast } from "sonner";
+
 import axios from "axios";
 
 const page: React.FC = () => {
@@ -19,6 +21,7 @@ const page: React.FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,6 +38,8 @@ const page: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+
     const user = {
       email,
       password,
@@ -43,8 +48,10 @@ const page: React.FC = () => {
     await axios
       .post("http://localhost:8080/auth/login", user, { withCredentials: true })
       .then((res) => {
-        if (res.data.status === "success") {
-          console.log(res.data.user);
+        if (res.data.status == false) {
+          toast.error(res.data.message);
+          setLoading(false);
+        } else {
           const uid = res.data.user.uid;
           const profilePic = res.data.user.image;
 
@@ -61,6 +68,8 @@ const page: React.FC = () => {
 
   return (
     <div className=" flex justify-center p-6">
+      <Toaster />
+
       <div className="bg-neutral rounded-lg flex justify-center p-6">
         <form className="space-y-3">
           <h1 className="text-center text-xl font-bold">Login</h1>
@@ -110,8 +119,13 @@ const page: React.FC = () => {
             <button
               onClick={handleLogin}
               className="btn btn-warning text-white"
+              disabled={loading}
             >
-              Submit
+              {loading ? (
+                <span className="loading loading-spinner text-warning"></span>
+              ) : (
+                "Login"
+              )}
             </button>
           </div>
         </form>
