@@ -8,6 +8,11 @@ const userSchama = new Schema({
   password: { type: String, required: true },
   profile: { type: String, required: true },
   role: { type: String, default: "user" },
+  cart: [
+    {
+      product: { type: Schema.Types.ObjectId, ref: "Product" },
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchama);
