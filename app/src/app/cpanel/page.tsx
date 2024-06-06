@@ -21,13 +21,14 @@ const page: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-center p-3">
+      <div className="flex justify-center p-3 space-x-3">
         <input
           onChange={search}
           type="text"
           placeholder="Type here"
           className="input input-bordered w-full max-w-xs"
         />
+        <button className="btn btn-warning text-white">Add User</button>
       </div>
       <div className="p-6 overflow-x-auto">
         <table className="table">
@@ -50,7 +51,7 @@ const page: React.FC = () => {
                 <td>
                   <Link
                     className={user.id ? "btn btn-warning text-white" : ""}
-                    href={`/cpanel/edit/${user.id}`}
+                    href={`/user/${user.id}`}
                   >
                     {user.id ? "Edit" : ""}
                   </Link>
