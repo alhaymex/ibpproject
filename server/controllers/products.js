@@ -41,3 +41,73 @@ exports.getAll = async (req, res) => {
     res.status(500).json({ message: "Something went wrong!", status: false });
   }
 };
+
+exports.addToCart = async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ message: "Unauthorized", status: false });
+    }
+
+    const { productId, quantity } = req.body;
+    if (!productId || !quantity) {
+      return res.status(400).json({
+        message: "Product ID and quantity are required",
+        status: false,
+      });
+    }
+
+    const user = await User.findById(req.session.user);
+
+    const productIndex = user.cart.findIndex(
+      (p) => p.product.toString() === productId
+    );
+
+    if (productIndex > -1) {
+      user.cart[productIndex].quantity += quantity;
+    } else {
+      user.cart.push({ product: productId, quantity });
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Product added to cart",
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getCart = async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.status(401).json({ message: "Unauthorized", status: false });
+    }
+
+    const user = await User.findById(req.session.user);
+
+    const productIds = user.cart.map((item) => item.product);
+    const products = await Product.find({ _id: { $in: productIds } });
+
+    const cart = user.cart.map((item) => {
+      const product = products.find(
+        (p) => p._id.toString() === item.product.toString()
+      );
+      return {
+        product: {
+          _id: product._id,
+          name: product.title,
+          description: product.description,
+          price: product.price,
+          image: product.image,
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    res.status(200).json({ cart, status: true });
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Toaster, toast } from "sonner";
 
 export default function Home() {
   const isLoggedIn = useSelector((state: any) => state.auth.loggedIn);
@@ -30,7 +31,6 @@ export default function Home() {
     getAllProducts();
   }, []);
 
-  // Function to trim description if it is too long
   const trimDescription = (description: string, maxLength: number) => {
     if (description.length > maxLength) {
       return description.substring(0, maxLength) + "...";
@@ -38,8 +38,30 @@ export default function Home() {
     return description;
   };
 
+  const addToCart = async (productId: string) => {
+    await axios
+      .post(
+        "http://localhost:8080/products/addtocart",
+        { productId, quantity: 1 },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.status == true) {
+          toast.success(res.data.message);
+        } else {
+          toast.error(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Something went wrong");
+      });
+  };
+
   return (
     <div className="flex justify-center">
+      <Toaster />
+
       {isLoggedIn ? (
         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-2">
           {products.map((product: any) => (
@@ -50,7 +72,7 @@ export default function Home() {
               title={product.title}
               price={product.price}
               description={trimDescription(product.description, 50)} // Trim description to 100 characters
-              onClick={() => {}}
+              onClick={() => addToCart(product._id)}
             />
           ))}
         </div>

@@ -2,16 +2,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 interface Product {
   _id: string;
   title: string;
   description: string;
   image: string;
+  price: number;
 }
 
 const page: React.FC = () => {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
+
+  const role = useSelector((state: any) => state.auth.role);
+
+  if (role !== "admin") {
+    router.push("/login");
+  }
 
   const trimDescription = (description: string, maxLength: number) => {
     if (description.length > maxLength) {
@@ -24,12 +36,18 @@ const page: React.FC = () => {
     const getAllProducts = async () => {
       await axios.get("http://localhost:8080/products/all").then((res) => {
         setProducts(res.data.products);
+        setLoading(false);
       });
     };
     getAllProducts();
   });
   return (
     <div>
+      {loading && (
+        <div className="flex justify-center">
+          <span className="loading loading-infinity loading-lg"></span>
+        </div>
+      )}
       <div className="overflow-x-auto">
         <table className="table">
           {/* head */}
@@ -70,8 +88,8 @@ const page: React.FC = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="font-bold">Hart Hagerty</div>
-                      <div className="text-sm opacity-50">United States</div>
+                      <div className="font-bold">{product.title}</div>
+                      <div className="text-sm opacity-50">₺{product.price}</div>
                     </div>
                   </div>
                 </td>
@@ -91,10 +109,10 @@ const page: React.FC = () => {
           <tfoot>
             <tr>
               <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
-              <th></th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </tfoot>
         </table>

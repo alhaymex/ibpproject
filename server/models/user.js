@@ -10,7 +10,8 @@ const userSchama = new Schema({
   role: { type: String, default: "user" },
   cart: [
     {
-      product: { type: Schema.Types.ObjectId, ref: "Product" },
+      product: { type: Schema.Types.ObjectId, ref: "Cart" },
+      quantity: { type: Number, required: true },
     },
   ],
 });
