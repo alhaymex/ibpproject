@@ -1,9 +1,14 @@
 # Internet Based Programming Project
 
-This is the final project for the Internet Based Programming course. The project utilizes a modern web development stack, including Next.js 14, Tailwind CSS, DaisyUI, Express.js, Node.js, and MongoDB. It aims to provide a comprehensive example of a full-stack application.
+This repository contains the final project for the Internet Based Programming course. The project demonstrates a full-stack e-commerce application using a modern web development stack. It includes a user-friendly front end, robust server-side processing, and a scalable database solution.
+
+## Technologies Used
+
+* Frontend: Next.js 14, Tailwind CSS, DaisyUI
+* Backend: Express.js, Node.js
+* Database: MongoDB
 
  
-
 ## Installation
 Follow these steps to set up and run the project locally:
 
@@ -55,7 +60,3 @@ After setting up the project, you can access the web application by navigating t
 
 ## Project Video
 You can watch the project demonstration video by following this [Youtube Video](URL)
-
-
-
-
