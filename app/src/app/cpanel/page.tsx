@@ -38,7 +38,9 @@ const page: React.FC = () => {
           placeholder="Type here"
           className="input input-bordered w-full max-w-xs"
         />
-        <button className="btn btn-warning text-white">Add User</button>
+        <Link href="/cpanel/adduser" className="btn btn-warning text-white">
+          Add User
+        </Link>
       </div>
       <div className="p-6 overflow-x-auto">
         <table className="table">

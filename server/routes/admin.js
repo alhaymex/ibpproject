@@ -9,4 +9,6 @@ router.get("/user/:id", adminControllers.getUser);
 
 router.post("/updateuser", adminControllers.updateUser);
 
+router.post("/adduser", adminControllers.addUser);
+
 module.exports = router;

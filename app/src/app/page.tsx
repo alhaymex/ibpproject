@@ -15,6 +15,7 @@ export default function Home() {
   }
 
   const [loading, setLoading] = useState(false);
+  const [loadingMap, setLoadingMap] = useState<{ [key: string]: boolean }>({});
 
   const [products, setProducts] = useState([]);
 
@@ -41,7 +42,10 @@ export default function Home() {
   };
 
   const addToCart = async (productId: string) => {
-    setLoading(true);
+    setLoadingMap((prevLoadingMap) => ({
+      ...prevLoadingMap,
+      [productId]: true,
+    }));
     await axios
       .post(
         "http://localhost:8080/products/addtocart",
@@ -59,6 +63,12 @@ export default function Home() {
       .catch((err) => {
         console.log(err);
         toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setLoadingMap((prevLoadingMap) => ({
+          ...prevLoadingMap,
+          [productId]: false,
+        }));
       });
   };
 
@@ -77,7 +87,7 @@ export default function Home() {
               price={product.price}
               description={trimDescription(product.description, 50)} // Trim description to 100 characters
               onClick={() => addToCart(product._id)}
-              loading={loading}
+              loading={loadingMap[product._id] || false}
             />
           ))}
         </div>

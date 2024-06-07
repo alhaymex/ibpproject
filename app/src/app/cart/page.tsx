@@ -8,12 +8,20 @@ import { Toaster, toast } from "sonner";
 
 const page: React.FC = () => {
   const [loading, setLoading] = useState(true);
-  const [addBtnLoading, setAddBtnLoading] = useState(false);
-  const [removeBtnLoading, setRemoveBtnLoading] = useState(false);
+  const [addBtnLoadingMap, setAddBtnLoadingMap] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [removeBtnLoadingMap, setRemoveBtnLoadingMap] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [products, setProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const addToCart = async (productId: string) => {
-    setAddBtnLoading(true);
+    setAddBtnLoadingMap((prevLoadingMap) => ({
+      ...prevLoadingMap,
+      [productId]: true,
+    }));
     await axios
       .post(
         "http://localhost:8080/products/addtocart",
@@ -23,7 +31,6 @@ const page: React.FC = () => {
       .then((res) => {
         if (res.data.status == true) {
           toast.success(res.data.message);
-          setAddBtnLoading(false);
         } else {
           toast.error(res.data.message);
         }
@@ -31,11 +38,20 @@ const page: React.FC = () => {
       .catch((err) => {
         console.log(err);
         toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setAddBtnLoadingMap((prevLoadingMap) => ({
+          ...prevLoadingMap,
+          [productId]: false,
+        }));
       });
   };
 
   const removeFromCart = async (productId: string) => {
-    setRemoveBtnLoading(true);
+    setRemoveBtnLoadingMap((prevLoadingMap) => ({
+      ...prevLoadingMap,
+      [productId]: true,
+    }));
     await axios
       .post(
         "http://localhost:8080/products/removefromcart",
@@ -45,7 +61,6 @@ const page: React.FC = () => {
       .then((res) => {
         if (res.data.status == true) {
           toast.success(res.data.message);
-          setRemoveBtnLoading(false);
         } else {
           toast.error(res.data.message);
         }
@@ -53,6 +68,12 @@ const page: React.FC = () => {
       .catch((err) => {
         console.log(err);
         toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setRemoveBtnLoadingMap((prevLoadingMap) => ({
+          ...prevLoadingMap,
+          [productId]: false,
+        }));
       });
   };
 
@@ -74,6 +95,14 @@ const page: React.FC = () => {
     getCart();
   }, [addToCart, removeFromCart]);
 
+  useEffect(() => {
+    let sum = 0;
+    products.forEach((product: any) => {
+      sum += product.product.price * product.quantity;
+    });
+    setTotalPrice(sum);
+  }, [products]);
+
   const trimDescription = (description: string, maxLength: number) => {
     if (description.length > maxLength) {
       return description.substring(0, maxLength) + "...";
@@ -85,7 +114,8 @@ const page: React.FC = () => {
     <div>
       <Toaster />
 
-      <h1 className="text-3xl text-center">Your Cart</h1>
+      <h1 className="text-3xl text-center">Your Cart </h1>
+
       {loading && (
         <div className="flex justify-center">
           <span className="loading loading-infinity loading-lg text-3xl text-warning"></span>
@@ -125,7 +155,7 @@ const page: React.FC = () => {
                   onClick={() => removeFromCart(product.product._id)}
                   className="btn bg-red-500 btn-error text-white"
                 >
-                  {removeBtnLoading ? (
+                  {removeBtnLoadingMap[product.product._id] ? (
                     <span className="loading loading-spinner loading-md"></span>
                   ) : (
                     "Remove"
@@ -135,7 +165,7 @@ const page: React.FC = () => {
                   onClick={() => addToCart(product.product._id)}
                   className="btn btn-warning text-white"
                 >
-                  {addBtnLoading ? (
+                  {addBtnLoadingMap[product.product._id] ? (
                     <span className="loading loading-spinner loading-md"></span>
                   ) : (
                     "Add to Cart"
@@ -165,6 +195,13 @@ const page: React.FC = () => {
           </div>
         ))}
       </div>
+      {products.length > 0 &&
+        !loading && ( // Render the total price div only if there are products and loading is false
+          <div className="flex justify-between bg-base-100 p-3 shadow-lg">
+            <h1 className="text-3xl">Total Price: ₺{totalPrice.toFixed(2)}</h1>
+            <button className="btn btn-success text-white">Checkout</button>
+          </div>
+        )}
     </div>
   );
 };

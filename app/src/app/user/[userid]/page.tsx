@@ -76,7 +76,6 @@ const Page: React.FC<PageProps> = ({ params }) => {
       userId,
       firstname: user.firstname,
       lastname: user.lastname,
-      email: user.email,
       password,
     };
 
@@ -112,7 +111,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
   };
 
   if (role !== "admin") {
-    return null; // Prevent rendering if the user is not an admin
+    return null;
   }
 
   return (
@@ -157,7 +156,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
             </label>
             <label className="input input-bordered flex items-center gap-2">
               <input
-                onChange={handleInputChange}
+                disabled
                 name="email"
                 type="email"
                 className="grow"

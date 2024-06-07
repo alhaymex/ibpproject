@@ -79,7 +79,7 @@ exports.updateUser = async (req, res) => {
 
     if (firstname) user.firstname = firstname;
     if (lastname) user.lastname = lastname;
-    if (email) user.email = email;
+    // if (email) user.email = email;
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -97,5 +97,47 @@ exports.updateUser = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Internal Server Error", status: false });
+  }
+};
+
+exports.addUser = async (req, res) => {
+  try {
+    let { firstname, lastname, email, password, role } = req.body;
+
+    firstname = firstname.toLowerCase();
+    const str0 = firstname;
+    firstname = str0.charAt(0).toUpperCase() + str0.slice(1);
+
+    lastname = lastname.toLowerCase();
+    const str1 = lastname;
+    lastname = str1.charAt(0).toUpperCase() + str1.slice(1);
+
+    email = email.toLowerCase();
+
+    const checkUser = await User.findOne({ email });
+    if (checkUser)
+      return res
+        .status(200)
+        .json({ message: "User already exists!", status: false });
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const user = new User({
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword,
+      profile: `https://api.dicebear.com/7.x/initials/svg?seed=${
+        firstname + " " + lastname
+      }.svg`,
+      role,
+    });
+
+    await user.save();
+
+    res.status(200).json({ status: true, message: "User added successfully" });
+  } catch (error) {
+    console.error("Error adding user:", error);
+    res.status(500).json({ message: "Internal Server Error", status: false });
   }
 };

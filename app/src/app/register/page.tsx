@@ -32,6 +32,11 @@ const page: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!firstname || !lastname || !email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     setLoading(true);
 
     const user = {
