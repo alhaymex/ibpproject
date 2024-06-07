@@ -1,12 +1,60 @@
+// @ts-nocheck
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Card from "@/components/Card";
 import Image from "next/image";
+import { Toaster, toast } from "sonner";
 
 const page: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [addBtnLoading, setAddBtnLoading] = useState(false);
+  const [removeBtnLoading, setRemoveBtnLoading] = useState(false);
   const [products, setProducts] = useState([]);
+
+  const addToCart = async (productId: string) => {
+    setAddBtnLoading(true);
+    await axios
+      .post(
+        "http://localhost:8080/products/addtocart",
+        { productId, quantity: 1 },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.status == true) {
+          toast.success(res.data.message);
+          setAddBtnLoading(false);
+        } else {
+          toast.error(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Something went wrong");
+      });
+  };
+
+  const removeFromCart = async (productId: string) => {
+    setRemoveBtnLoading(true);
+    await axios
+      .post(
+        "http://localhost:8080/products/removefromcart",
+        { productId, quantity: 1 },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.status == true) {
+          toast.success(res.data.message);
+          setRemoveBtnLoading(false);
+        } else {
+          toast.error(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Something went wrong");
+      });
+  };
 
   useEffect(() => {
     const getCart = async () => {
@@ -24,7 +72,7 @@ const page: React.FC = () => {
     };
 
     getCart();
-  }, []);
+  }, [addToCart, removeFromCart]);
 
   const trimDescription = (description: string, maxLength: number) => {
     if (description.length > maxLength) {
@@ -35,6 +83,8 @@ const page: React.FC = () => {
 
   return (
     <div>
+      <Toaster />
+
       <h1 className="text-3xl text-center">Your Cart</h1>
       {loading && (
         <div className="flex justify-center">
@@ -52,28 +102,44 @@ const page: React.FC = () => {
                 height={200}
                 className="rounded-lg"
                 onClick={() =>
-                  document.getElementById("my_modal_2").showModal()
+                  document.getElementById("my_modal_2")!.showModal()
                 }
               />
             </figure>
             <div className="card-body">
               <h2
                 onClick={() =>
-                  document.getElementById("my_modal_2").showModal()
+                  document.getElementById("my_modal_2")!.showModal()
                 }
                 className="card-title cursor-pointer hover:underline"
               >
                 {product.product.name}
               </h2>
               <p>{trimDescription(product.product.description, 100)}</p>
-              <p>₺{product.product.price * product.quantity}</p>
+              <p>
+                ₺{(product.product.price * product.quantity).toFixed(2)}
+              </p>{" "}
               <p>Quantity: {product.quantity}</p>
               <div className="card-actions justify-end">
-                <button className="btn bg-red-500 btn-error text-white">
-                  Delete
+                <button
+                  onClick={() => removeFromCart(product.product._id)}
+                  className="btn bg-red-500 btn-error text-white"
+                >
+                  {removeBtnLoading ? (
+                    <span className="loading loading-spinner loading-md"></span>
+                  ) : (
+                    "Remove"
+                  )}
                 </button>
-                <button className="btn btn-warning text-white">
-                  Add to Cart
+                <button
+                  onClick={() => addToCart(product.product._id)}
+                  className="btn btn-warning text-white"
+                >
+                  {addBtnLoading ? (
+                    <span className="loading loading-spinner loading-md"></span>
+                  ) : (
+                    "Add to Cart"
+                  )}
                 </button>
               </div>
             </div>

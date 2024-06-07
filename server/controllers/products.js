@@ -79,6 +79,59 @@ exports.addToCart = async (req, res) => {
   }
 };
 
+exports.removeFromCart = async (req, res) => {
+  try {
+    // Check if the user is authenticated
+    if (!req.session.user) {
+      return res.status(401).json({ message: "Unauthorized", status: false });
+    }
+
+    const { productId, quantity } = req.body;
+
+    // Validate input
+    if (!productId || !quantity) {
+      return res.status(400).json({
+        message: "Product ID and quantity are required",
+        status: false,
+      });
+    }
+
+    // Find the user in the database
+    const user = await User.findById(req.session.user);
+
+    const productIndex = user.cart.findIndex(
+      (p) => p.product.toString() === productId
+    );
+
+    if (productIndex === -1) {
+      return res.status(404).json({
+        message: "Product not found in cart",
+        status: false,
+      });
+    }
+
+    if (user.cart[productIndex].quantity <= quantity) {
+      user.cart.splice(productIndex, 1);
+    } else {
+      user.cart[productIndex].quantity -= quantity;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Product removed from cart",
+      status: true,
+    });
+  } catch (error) {
+    console.log(error);
+    // Send error response
+    res.status(500).json({
+      message: "An error occurred while removing the product from the cart",
+      status: false,
+    });
+  }
+};
+
 exports.getCart = async (req, res) => {
   try {
     if (!req.session.user) {

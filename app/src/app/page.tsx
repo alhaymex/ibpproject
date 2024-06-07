@@ -14,6 +14,8 @@ export default function Home() {
     router.push("/login");
   }
 
+  const [loading, setLoading] = useState(false);
+
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function Home() {
   };
 
   const addToCart = async (productId: string) => {
+    setLoading(true);
     await axios
       .post(
         "http://localhost:8080/products/addtocart",
@@ -48,6 +51,7 @@ export default function Home() {
       .then((res) => {
         if (res.data.status == true) {
           toast.success(res.data.message);
+          setLoading(false);
         } else {
           toast.error(res.data.message);
         }
@@ -73,6 +77,7 @@ export default function Home() {
               price={product.price}
               description={trimDescription(product.description, 50)} // Trim description to 100 characters
               onClick={() => addToCart(product._id)}
+              loading={loading}
             />
           ))}
         </div>

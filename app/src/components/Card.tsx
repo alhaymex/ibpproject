@@ -9,6 +9,7 @@ interface CardProps {
   price: number;
   description: string;
   onClick: () => void;
+  loading?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -18,6 +19,7 @@ const Card: React.FC<CardProps> = ({
   price,
   description,
   onClick,
+  loading,
 }) => {
   return (
     <div className="card w-[20rem] bg-base-100 shadow-xl" key={id}>
@@ -40,7 +42,11 @@ const Card: React.FC<CardProps> = ({
         <div className="card-actions flex items-center justify-between">
           <span>₺{price}</span>
           <button className="btn btn-warning text-white" onClick={onClick}>
-            Add to Cart
+            {loading ? (
+              <span className="loading loading-spinner loading-md"></span>
+            ) : (
+              "Add to Cart"
+            )}
           </button>
         </div>
       </div>

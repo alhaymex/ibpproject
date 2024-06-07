@@ -9,6 +9,8 @@ router.get("/all", productsControllers.getAll);
 
 router.post("/addtocart", productsControllers.addToCart);
 
+router.post("/removefromcart", productsControllers.removeFromCart);
+
 router.get("/getcart", productsControllers.getCart);
 
 module.exports = router;

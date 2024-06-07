@@ -2,8 +2,18 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { Toaster, toast } from "sonner";
 
 const page: React.FC = () => {
+  const router = useRouter();
+  const role = useSelector((state: any) => state.auth.role);
+
+  if (role !== "admin") {
+    router.push("/");
+  }
+
   const [users, setUsers] = useState([{}]);
   const search = async (e: any) => {
     // If the input is empty dont search
