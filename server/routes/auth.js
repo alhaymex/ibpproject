@@ -13,4 +13,6 @@ router.post("/logout", authControllers.logout);
 
 router.get("/profile", authControllers.profile);
 
+router.post("/updateprofile", authControllers.updateProfile);
+
 module.exports = router;

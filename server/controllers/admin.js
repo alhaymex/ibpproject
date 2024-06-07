@@ -70,7 +70,7 @@ exports.updateUser = async (req, res) => {
       return res.status(401).json({ message: "Access Denied", status: false });
     }
 
-    const { userId, firstname, lastname, email, password } = req.body;
+    const { userId, firstname, lastname, password } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -79,7 +79,6 @@ exports.updateUser = async (req, res) => {
 
     if (firstname) user.firstname = firstname;
     if (lastname) user.lastname = lastname;
-    // if (email) user.email = email;
 
     if (password) {
       const salt = await bcrypt.genSalt(10);

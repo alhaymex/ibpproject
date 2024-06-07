@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const page: React.FC = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const page: React.FC = () => {
           setUser(res.data.user);
           setLoading(false);
         } else {
-          console.log(res.data.message);
+          router.push("/login");
         }
       });
   }, []);
@@ -72,7 +73,12 @@ const page: React.FC = () => {
               </div>
 
               <div className="mt-3 card-actions justify-center">
-                <button className="btn btn-warning text-white">Update</button>
+                <Link
+                  href="/profile/update"
+                  className="btn btn-warning text-white"
+                >
+                  Update
+                </Link>
               </div>
             </div>
           </div>
