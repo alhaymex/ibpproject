@@ -91,7 +91,7 @@ const Page: React.FC = () => {
         name="price"
       />
       <textarea
-        placeholder="Bio"
+        placeholder="Description"
         className="textarea textarea-bordered textarea-lg w-full max-w-xs h-32"
         onChange={handleTextareaChange}
         value={description}

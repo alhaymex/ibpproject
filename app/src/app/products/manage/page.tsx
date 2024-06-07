@@ -4,6 +4,8 @@ import axios from "axios";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { toast, Toaster } from "sonner";
 
 interface Product {
   _id: string;
@@ -32,6 +34,22 @@ const page: React.FC = () => {
     return description;
   };
 
+  const handleDelete = async (id: string) => {
+    await axios
+      .post(
+        "http://localhost:8080/products/delete",
+        { id },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.status === false) {
+          toast.error(res.data.message);
+        } else {
+          toast.success(res.data.message);
+        }
+      });
+  };
+
   useEffect(() => {
     const getAllProducts = async () => {
       await axios.get("http://localhost:8080/products/all").then((res) => {
@@ -40,9 +58,10 @@ const page: React.FC = () => {
       });
     };
     getAllProducts();
-  });
+  }, [handleDelete]);
   return (
     <div>
+      <Toaster />
       {loading && (
         <div className="flex justify-center">
           <span className="loading loading-infinity loading-lg"></span>
@@ -95,10 +114,18 @@ const page: React.FC = () => {
                 </td>
                 <td>{trimDescription(product.description, 80)}</td>
                 <td>
-                  <button className="btn btn-warning text-white">Edit</button>
+                  <Link
+                    href={`/products/${product._id}`}
+                    className="btn btn-warning text-white"
+                  >
+                    Edit
+                  </Link>
                 </td>
                 <th>
-                  <button className="btn bg-red-600 btn-error text-white">
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="btn bg-red-600 btn-error text-white"
+                  >
                     Delete
                   </button>
                 </th>
