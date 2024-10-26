@@ -59,4 +59,4 @@ After setting up the project, you can access the web application by navigating t
 `http://localhost:3000` in your web browser. The server will handle API requests at `http://localhost:8080`.
 
 ## Project Video
-You can watch the project demonstration video by following this [Youtube Video](https://youtu.be/AjCH2Hfhx_0)
+You can watch the project demonstration video by following this [Youtube Video]
